@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика сеансов</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: Arial, sans-serif;
+            background: #f1f3f6;
+            color: #253b5b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #203e70;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #345f9e;
+            color: white;
+            text-decoration: none;
+        }
+
+        .summary {
+            margin: 20px 0;
+            padding: 16px;
+            background: #eaf0f8;
+            border-radius: 8px;
+        }
+
+        .summary strong {
+            color: #203e70;
+            font-size: 24px;
+        }
+
+        .chart-wrapper {
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+
+        .chart {
+            min-width: 850px;
+            height: 330px;
+            display: flex;
+            align-items: stretch;
+            gap: 5px;
+            padding: 15px 5px 0;
+            border-bottom: 2px solid #aebdd0;
+            border-left: 1px solid #d5deea;
+            background: repeating-linear-gradient(
+                    to bottom,
+                    transparent 0,
+                    transparent 64px,
+                    #e7edf5 65px,
+                    transparent 66px
+            );
+        }
+
+        .day {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+        }
+
+        .bar-area {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .bar {
+            width: 70%;
+            min-width: 5px;
+            max-width: 24px;
+            background: #4778b9;
+            border-radius: 4px 4px 0 0;
+            transition: background 0.2s;
+        }
+
+        .bar:hover {
+            background: #254e87;
+        }
+
+        .bar.zero {
+            background: #cbd5e1;
+        }
+
+        .count {
+            margin-top: 5px;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .date {
+            margin-top: 7px;
+            font-size: 10px;
+            color: #64748b;
+            white-space: nowrap;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        .legend {
+            margin-top: 14px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Статистика сеансов</h1>
+
+    <p>
+        Количество сеансов за период:
+        <span th:text="${#temporals.format(startDate, 'dd.MM.yyyy')}"></span>
+        —
+        <span th:text="${#temporals.format(today, 'dd.MM.yyyy')}"></span>
+    </p>
+
+    <div class="summary">
+        Всего сеансов за последние 30 дней:
+        <br>
+        <strong th:text="${totalInPeriod}">0</strong>
+    </div>
+
+    <h2>Количество сеансов по дням</h2>
+
+    <div class="chart-wrapper">
+        <div class="chart">
+
+            <div class="day" th:each="stat : ${dailyStats}">
+                <div class="bar-area">
+                    <div class="bar"
+                         th:classappend="${stat.count == 0 ? ' zero' : ''}"
+                         th:style="|height: ${stat.widthPercent}%;|"
+                         th:title="|${stat.dateLabel}: ${stat.count} сеансов|">
+                    </div>
+                </div>
+
+                <span class="count"
+                      th:text="${stat.count}">
+                    0
+                </span>
+
+                <span class="date"
+                      th:text="${stat.dateLabel}">
+                    01.01
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <p class="legend">
+        Каждый столбец показывает число сеансов за один день.
+        Серые столбцы обозначают дни без сеансов.
+    </p>
+
+    <a th:href="@{/sessions}" class="button">
+        Вернуться к списку сеансов
+    </a>
+
+</div>
+</body>
+</html>

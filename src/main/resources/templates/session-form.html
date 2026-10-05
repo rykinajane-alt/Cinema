@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle}">Сеанс</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f1f3f6;
+      color: #253b5b;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 28px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #203e70;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .error {
+      display: block;
+      margin-top: 5px;
+      color: #b84242;
+      font-size: 13px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    button, .button {
+      display: inline-block;
+      padding: 11px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #345f9e;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .secondary {
+      background: #68778d;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <h1 th:text="${pageTitle}">Добавление сеанса</h1>
+
+  <form th:action="@{/sessions/save}"
+        th:object="${cinemaSession}"
+        method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <div class="form-group">
+      <label for="filmTitle">Название фильма</label>
+
+      <input type="text"
+             id="filmTitle"
+             th:field="*{filmTitle}"
+             placeholder="Введите название фильма">
+
+      <span class="error"
+            th:if="${#fields.hasErrors('filmTitle')}"
+            th:errors="*{filmTitle}">
+            </span>
+    </div>
+
+    <div class="form-group">
+      <label for="filmStudio">Киностудия</label>
+
+      <input type="text"
+             id="filmStudio"
+             th:field="*{filmStudio}"
+             placeholder="Введите название киностудии">
+
+      <span class="error"
+            th:if="${#fields.hasErrors('filmStudio')}"
+            th:errors="*{filmStudio}">
+            </span>
+    </div>
+
+    <div class="form-group">
+      <label for="sessionDateTime">Дата и время сеанса</label>
+
+      <input type="datetime-local"
+             id="sessionDateTime"
+             th:field="*{sessionDateTime}">
+
+      <span class="error"
+            th:if="${#fields.hasErrors('sessionDateTime')}"
+            th:errors="*{sessionDateTime}">
+            </span>
+    </div>
+
+    <div class="form-group">
+      <label for="ticketCount">Количество билетов</label>
+
+      <input type="number"
+             id="ticketCount"
+             th:field="*{ticketCount}"
+             min="0"
+             placeholder="Введите количество билетов">
+
+      <span class="error"
+            th:if="${#fields.hasErrors('ticketCount')}"
+            th:errors="*{ticketCount}">
+            </span>
+    </div>
+
+    <div class="buttons">
+      <button type="submit">Сохранить</button>
+
+      <a th:href="@{/sessions}"
+         class="button secondary">
+        Назад
+      </a>
+    </div>
+
+  </form>
+</div>
+</body>
+</html>
